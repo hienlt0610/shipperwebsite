@@ -44,7 +44,7 @@
                                         <td>@user.FullName</td>
                                         <td>@user.Email</td>
                                         <td>@user.Phone</td>
-                                        <td><a href="#" class="btn btn-default btn-fill">Sửa</a><a href="#" class="btn btn-danger btn-fill m-l-5">Xóa</a></td>
+                                        <td><a href="@Url.Action("Edit","Staff",new { id = user.UserID })" class="btn btn-default btn-fill">Sửa</a><a href="#" class="btn btn-danger btn-fill m-l-5">Xóa</a></td>
                                     </tr>
                                 }
                             </tbody>

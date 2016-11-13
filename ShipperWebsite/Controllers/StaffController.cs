@@ -24,10 +24,5 @@ namespace ShipperWebsite.Controllers
             }).ToList();
             return View(model);
         }
-
-        public ActionResult Edit()
-        {
-
-        }
 	}
 }
