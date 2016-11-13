@@ -1,6 +1,5 @@
-﻿
+﻿@model ShipperWebsite.ViewModel.LoginViewModel
 @{
-    ViewBag.Title = "Index";
     Layout = null;
 }
 
@@ -17,17 +16,22 @@
 </head>
 <body>
     <div class="wrap">
-        <div class="avatar">
-            <img width="80px" src="~/Content/img/avatar.jpg">
-        </div>
-        <input type="text" placeholder="Tài khoản" required>
-        <div class="bar">
-            <i></i>
-        </div>
-        <input type="password" placeholder="Mật khẩu" required>
-        <button>Đăng nhập</button>
+        @using (Html.BeginForm())
+        {
+            @Html.ValidationSummary(true)
+            <div class="avatar">
+                <img width="80px" src="~/Content/img/avatar.jpg">
+            </div>
+            @Html.TextBoxFor(m => m.UserName)
+            @Html.ValidationMessageFor(m=>m.UserName)
+            <div class="bar">
+                <i></i>
+            </div>
+            @Html.PasswordFor(m => m.Password_)
+            @Html.ValidationMessageFor(m => m.Password_)
+            <button>Đăng nhập</button>
+        }
+        @Html.ValidationMessage("error")
     </div>
 </body>
 </html>
-
-
