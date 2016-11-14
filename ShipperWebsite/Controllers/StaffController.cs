@@ -1,4 +1,5 @@
-﻿using ShipperWebsite.FirebaseModel;
+﻿using Newtonsoft.Json;
+using ShipperWebsite.FirebaseModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,10 @@ namespace ShipperWebsite.Controllers
 {
     public class StaffController : BaseController
     {
+        public StaffController()
+        {
+            CheckLogin = false;
+        }
         //
         // GET: /Staff/
         public ActionResult Index()
@@ -23,6 +28,32 @@ namespace ShipperWebsite.Controllers
                 ProfilePicture = u.Value.ProfilePicture
             }).ToList();
             return View(model);
+        }
+
+        [HttpGet]
+        public ActionResult Edit(String id)
+        {
+            if(id == null){
+                return new HttpNotFoundResult();
+            }
+            var userChild = FirebaseClient.Get("users/"+id);
+            var model = userChild.ResultAs<User>();
+            if (model == null) return new HttpNotFoundResult();
+            model.UserID = id;
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(User user)
+        {
+            var newUpdate = new
+            {
+                fullName = user.FullName,
+                phone = user.Phone
+            };
+            FirebaseClient.Update("users/" + user.UserID, newUpdate);
+
+            return RedirectToAction("Index","Staff");
         }
 	}
 }
