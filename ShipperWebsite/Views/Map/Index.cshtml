@@ -1,0 +1,166 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="https://www.gstatic.com/firebasejs/3.5.2/firebase.js"></script>
+<div class="map-container">
+    <div class="nv-main-box">
+        <div class="panel-group" id="panel-quote-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <strong>Nhân viên</strong>
+                        <span class="pull-right">
+                            <a data-toggle="collapse" data-parent="#panel-quote-group" href="#collapseQuote">
+                                <span class="toggle-icon pe-7s-angle-up-circle"></span>
+                            </a>
+                        </span>
+                    </h4>
+                </div>
+                <div id="collapseQuote" class="panel-collapse collapse">
+                    <ul class="list-group scrollbar">
+                        <li class="list-group-item">
+                            <div class="pull-left" style="margin-right:10px;"> 
+                                <a href="#">
+                                    <img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" class="media-photo">
+                                </a>
+                            </div>
+                            <div class="list-body">
+                                <h4 class="title">
+                                    Lorem Impsum
+                                </h4>
+                                <p class="summary">01207774140</p>
+                                <p class="summary">hienlt0610@gmail.com</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="map"></div>
+</div>
+
+
+@section scripts{
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCsDw_v8GIsJcDVWHijIvDVZYc5wjZjIbc&callback=initialize">
+    </script>
+    <script>
+    var map;
+    var marker;
+    var markers = [];
+    var pos;
+    function initialize() {
+        var uluru = { lat: 10.823640700000015, lng: 106.70425539999997 };
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 17,
+            center: uluru
+        });
+    }
+    var icons = {
+        deliver: {
+            icon: '/Content/img/motorbike.png'
+        }
+    }
+    // Initialize Firebase
+     //TODO: Replace with your project's customized code snippet
+    var config = {
+        apiKey: "AIzaSyAqtiaKW3-LKKvOoboVtCu1ilSPE_mJ3z0",
+        authDomain: "shippermanager-9752c.firebaseapp.com",
+        databaseURL: "https://shippermanager-9752c.firebaseio.com",
+        storageBucket: "bucket.appspot.com"
+    };
+    firebase.initializeApp(config);
+    //// Get a reference to the database service
+    var database = firebase.database();
+
+    var locationRef = database.ref('user_location');
+    var first = true;
+
+    locationRef.on('value', function (snapshot) {
+        deleteOverlays();
+        snapshot.forEach(function (childSnapshot) {
+            var id = childSnapshot.key;
+            var record = childSnapshot.val();
+            $('#collapseQuote .list-group').html('');
+            pos = new google.maps.LatLng(record.lat, record.lng);
+            marker = new google.maps.Marker({
+                position: pos,
+                map: map,
+                icon: icons.deliver.icon
+            });
+            addToListStaff(id);
+            var infowindow = new google.maps.InfoWindow({
+                content: "Đang tải..."
+            });
+            markers.push(marker);
+            marker.addListener('click', function () {
+                infowindow.open(map, this);
+                database.ref('users').child(id).once('value', function (snapshot) {
+                    var info = snapshot.val();
+                    infowindow.setContent('<p>Tên: ' + info.fullName + '</p><p>SĐT: ' + info.phone + '</p><p>Email: ' + info.email + '</p>');
+                });
+            });
+        });
+        if (first) {
+            first = false;
+            map.panTo(pos);
+        }
+    });
+
+    function jumpTo(lat, lng) {
+        var latlng = new google.maps.LatLng(lat, lng);
+        map.panTo(latlng);
+    }
+
+    $('a[data-toggle="collapse"]').click(function () {
+        $(this).find('span.toggle-icon').toggleClass('pe-7s-angle-up-circle pe-7s-angle-down-circle');
+    })
+
+    $(document).on('click', function (event) {
+        var container = $(".nv-main-box");
+        if (!container.is(event.target) &&            // If the target of the click isn't the container...
+            container.has(event.target).length === 0) // ... nor a descendant of the container
+        {
+            $('#collapseQuote').collapse("hide");
+        }
+    });
+
+    $(document).on('click', '#collapseQuote .list-group li', function () {
+        var id = $(this).data('id');
+        database.ref('user_location').child(id).once('value', function (snapshot) {
+            var result = snapshot.val();
+            jumpTo(result.lat, result.lng);
+            $('#collapseQuote').collapse("hide");
+        });
+    });
+
+    // Deletes all markers in the array by removing references to them
+    function deleteOverlays() {
+        if (markers) {
+            for (i in markers) {
+                markers[i].setMap(null);
+            }
+            markers.length = 0;
+        }
+    }
+    // Shows any overlays currently in the array
+    function showOverlays() {
+        if (markers) {
+            for (i in markers) {
+                markers[i].setMap(map);
+            }
+        }
+    }
+
+    function addToListStaff(id) {
+        database.ref('users').child(id).once('value', function (snapshot) {
+            var info = snapshot.val();
+            var item = '<li data-id=' + id + ' class=\"list-group-item\">\n<div class=\"pull-left\" style=\"margin-right:10px;\"> \n<a href=\"#\">\n<img src=\"https:\/\/s3.amazonaws.com\/uifaces\/faces\/twitter\/fffabs\/128.jpg\" class=\"media-photo\">\n<\/a>\n<\/div>\n<div class=\"list-body\">\n<h4 class=\"title\">\n' + info.fullName + '\n<\/h4>\n<p class=\"summary\">' + info.phone + '<\/p>\n <p class=\"summary\">' + info.email + '<\/p>\n <\/div>\n<\/li>';
+            $('#collapseQuote .list-group').append(item);
+        });
+    }
+</script>
+}

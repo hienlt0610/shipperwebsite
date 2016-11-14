@@ -191,6 +191,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\MapController.cs" />
     <Compile Include="Controllers\StaffController.cs" />
     <Compile Include="FirebaseModel\User.cs" />
     <Compile Include="Global.asax.cs">
@@ -201,66 +202,12 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ShipperAdmin\ShipperAdminDbContext.cs" />
     <Compile Include="Models\ShipperAdmin\UserAdmin.cs" />
-    <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
-    <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
-    <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="utils\Utilities.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bin\Antlr3.Runtime.dll" />
-    <Content Include="bin\Antlr3.Runtime.pdb" />
-    <Content Include="bin\EntityFramework.dll" />
-    <Content Include="bin\EntityFramework.SqlServer.dll" />
-    <Content Include="bin\EntityFramework.SqlServer.xml" />
-    <Content Include="bin\EntityFramework.xml" />
-    <Content Include="bin\Microsoft.AspNet.Identity.Core.dll" />
-    <Content Include="bin\Microsoft.AspNet.Identity.Core.xml" />
-    <Content Include="bin\Microsoft.AspNet.Identity.EntityFramework.dll" />
-    <Content Include="bin\Microsoft.AspNet.Identity.EntityFramework.xml" />
-    <Content Include="bin\Microsoft.AspNet.Identity.Owin.dll" />
-    <Content Include="bin\Microsoft.AspNet.Identity.Owin.xml" />
-    <Content Include="bin\Microsoft.Owin.dll" />
-    <Content Include="bin\Microsoft.Owin.Host.SystemWeb.dll" />
-    <Content Include="bin\Microsoft.Owin.Host.SystemWeb.xml" />
-    <Content Include="bin\Microsoft.Owin.Security.Cookies.dll" />
-    <Content Include="bin\Microsoft.Owin.Security.Cookies.xml" />
-    <Content Include="bin\Microsoft.Owin.Security.dll" />
-    <Content Include="bin\Microsoft.Owin.Security.Facebook.dll" />
-    <Content Include="bin\Microsoft.Owin.Security.Facebook.xml" />
-    <Content Include="bin\Microsoft.Owin.Security.Google.dll" />
-    <Content Include="bin\Microsoft.Owin.Security.Google.xml" />
-    <Content Include="bin\Microsoft.Owin.Security.MicrosoftAccount.dll" />
-    <Content Include="bin\Microsoft.Owin.Security.MicrosoftAccount.xml" />
-    <Content Include="bin\Microsoft.Owin.Security.OAuth.dll" />
-    <Content Include="bin\Microsoft.Owin.Security.OAuth.xml" />
-    <Content Include="bin\Microsoft.Owin.Security.Twitter.dll" />
-    <Content Include="bin\Microsoft.Owin.Security.Twitter.xml" />
-    <Content Include="bin\Microsoft.Owin.Security.xml" />
-    <Content Include="bin\Microsoft.Owin.xml" />
-    <Content Include="bin\Microsoft.Web.Infrastructure.dll" />
-    <Content Include="bin\Newtonsoft.Json.dll" />
-    <Content Include="bin\Newtonsoft.Json.xml" />
-    <Content Include="bin\Owin.dll" />
-    <Content Include="bin\ShipperWebsite.dll" />
-    <Content Include="bin\ShipperWebsite.pdb" />
-    <Content Include="bin\System.Web.Helpers.dll" />
-    <Content Include="bin\System.Web.Helpers.xml" />
-    <Content Include="bin\System.Web.Mvc.dll" />
-    <Content Include="bin\System.Web.Mvc.xml" />
-    <Content Include="bin\System.Web.Optimization.dll" />
-    <Content Include="bin\System.Web.Optimization.xml" />
-    <Content Include="bin\System.Web.Razor.dll" />
-    <Content Include="bin\System.Web.Razor.xml" />
-    <Content Include="bin\System.Web.WebPages.Deployment.dll" />
-    <Content Include="bin\System.Web.WebPages.Deployment.xml" />
-    <Content Include="bin\System.Web.WebPages.dll" />
-    <Content Include="bin\System.Web.WebPages.Razor.dll" />
-    <Content Include="bin\System.Web.WebPages.Razor.xml" />
-    <Content Include="bin\System.Web.WebPages.xml" />
-    <Content Include="bin\WebGrease.dll" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\css\animate.min.css" />
@@ -285,6 +232,7 @@
     <Content Include="Content\img\favicon.ico" />
     <Content Include="Content\img\loading-bubbles.svg" />
     <Content Include="Content\img\mask.png" />
+    <Content Include="Content\img\motorbike.png" />
     <Content Include="Content\img\new_logo.png" />
     <Content Include="Content\img\sidebar-1.jpg" />
     <Content Include="Content\img\sidebar-2.jpg" />
@@ -305,9 +253,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="obj\Debug\ShipperWebsite.csproj.FileListAbsolute.txt" />
-    <Content Include="obj\Debug\ShipperWebsite.dll" />
-    <Content Include="obj\Debug\ShipperWebsite.pdb" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\fonts\Pe-icon-7-stroke.eot" />
@@ -359,8 +304,6 @@
     <Content Include="Content\sass\lbd\_typography.scss" />
     <Content Include="Content\sass\lbd\_variables.scss" />
     <Content Include="Content\sass\light-bootstrap-dashboard.scss" />
-    <Content Include="bin\ShipperWebsite.dll.config" />
-    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -403,10 +346,11 @@
     <Content Include="Views\Shared\_SideBar.cshtml" />
     <Content Include="Views\Shared\_Navbar.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
+    <Content Include="Views\Staff\Edit.cshtml" />
+    <Content Include="Views\Map\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="obj\Debug\TempPE\" />
     <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
