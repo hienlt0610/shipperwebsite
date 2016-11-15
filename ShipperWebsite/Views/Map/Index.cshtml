@@ -50,8 +50,10 @@
     <script>
     var map;
     var marker;
-    var markers = [];
+    var markers = {};
     var pos;
+    var onlineStatus = '<label class="label label-success">Online</label>';
+    var offlineStatus = '<label class="label label-danger">Offline</label>';
     function initialize() {
         var uluru = { lat: 10.823640700000015, lng: 106.70425539999997 };
         map = new google.maps.Map(document.getElementById('map'), {
@@ -79,35 +81,68 @@
     var locationRef = database.ref('user_location');
     var first = true;
 
-    locationRef.on('value', function (snapshot) {
-        deleteOverlays();
+    //locationRef.on('child_changed', function (snapshot) {
+    //    //deleteOverlays();
+    //    console.log(snapshot.val());
+    //    snapshot.forEach(function (childSnapshot) {
+    //        //var id = childSnapshot.key;
+    //        //var record = childSnapshot.val();
+    //        //$('#collapseQuote .list-group').html('');
+    //        //pos = new google.maps.LatLng(record.lat, record.lng);
+    //        //marker = new google.maps.Marker({
+    //        //    position: pos,
+    //        //    map: map,
+    //        //    icon: icons.deliver.icon
+    //        //});
+    //        //var infowindow = new google.maps.InfoWindow({
+    //        //    content: "Đang tải..."
+    //        //});
+    //        //markers.push(marker);
+    //        //marker.addListener('click', function () {
+    //        //    infowindow.open(map, this);
+    //        //    database.ref('users').child(id).once('value', function (snapshot) {
+    //        //        var info = snapshot.val();
+    //        //        infowindow.setContent('<p>Tên: ' + info.fullName + '</p><p>SĐT: ' + info.phone + '</p><p>Email: ' + info.email + '</p>');
+    //        //    });
+    //        //});
+    //    });
+    //    if (first) {
+    //        first = false;
+    //        map.panTo(pos);
+    //        snapshot.forEach(function (childSnapshot) {
+    //            var id = childSnapshot.key;
+    //            addToListStaff(id);
+    //        });
+    //    }
+    //});
+    
+    database.ref('users').once('value', function (snapshot) {
+        $('#collapseQuote .list-group').html("");
+        snapshot.forEach(function (childSnapshot) {
+            var id = childSnapshot.key;
+            addToListStaff(id);
+        });
+    });
+    
+    //Khởi tạo các marker
+    database.ref('user_location').once('value', function (snapshot) {
         snapshot.forEach(function (childSnapshot) {
             var id = childSnapshot.key;
             var record = childSnapshot.val();
-            $('#collapseQuote .list-group').html('');
-            pos = new google.maps.LatLng(record.lat, record.lng);
-            marker = new google.maps.Marker({
-                position: pos,
-                map: map,
-                icon: icons.deliver.icon
-            });
-            addToListStaff(id);
-            var infowindow = new google.maps.InfoWindow({
-                content: "Đang tải..."
-            });
-            markers.push(marker);
-            marker.addListener('click', function () {
-                infowindow.open(map, this);
-                database.ref('users').child(id).once('value', function (snapshot) {
-                    var info = snapshot.val();
-                    infowindow.setContent('<p>Tên: ' + info.fullName + '</p><p>SĐT: ' + info.phone + '</p><p>Email: ' + info.email + '</p>');
-                });
-            });
+            var pos = new google.maps.LatLng(record.lat, record.lng);
+            var now = new Date().getTime();
+            var duration = now - parseInt(record.lastTime);
+            addMarker(id, pos);
         });
-        if (first) {
-            first = false;
-            map.panTo(pos);
-        }
+    });
+
+    //Lắng nghe hành động di chuyển
+    database.ref('user_location').on('child_changed', function (snapshot) {
+        var id = snapshot.key;
+        var record = snapshot.val();
+        var marker = markers[id];
+        var pos = new google.maps.LatLng(record.lat, record.lng);
+        marker.setPosition(pos);
     });
 
     function jumpTo(lat, lng) {
@@ -158,9 +193,45 @@
     function addToListStaff(id) {
         database.ref('users').child(id).once('value', function (snapshot) {
             var info = snapshot.val();
-            var item = '<li data-id=' + id + ' class=\"list-group-item\">\n<div class=\"pull-left\" style=\"margin-right:10px;\"> \n<a href=\"#\">\n<img src=\"https:\/\/s3.amazonaws.com\/uifaces\/faces\/twitter\/fffabs\/128.jpg\" class=\"media-photo\">\n<\/a>\n<\/div>\n<div class=\"list-body\">\n<h4 class=\"title\">\n' + info.fullName + '\n<\/h4>\n<p class=\"summary\">' + info.phone + '<\/p>\n <p class=\"summary\">' + info.email + '<\/p>\n <\/div>\n<\/li>';
+            var item = '<li data-id=' + id + ' class=\"list-group-item\">\n<div class=\"pull-left\" style=\"margin-right:10px;\"> \n<a href=\"#\">\n<img src=\"https:\/\/s3.amazonaws.com\/uifaces\/faces\/twitter\/fffabs\/128.jpg\" class=\"media-photo\">\n<\/a>\n<\/div>\n<div class=\"list-body\">\n<h4 class=\"title\">\n' + info.fullName + '<div class="pull-right user-status">' + offlineStatus + '</div>\n<\/h4>\n<p class=\"summary\">' + info.phone + '<\/p>\n <p class=\"summary\">' + info.email + '<\/p>\n <\/div>\n<\/li>';
             $('#collapseQuote .list-group').append(item);
+            database.ref('presences').child(id).on('value', function (snapshot) {
+                var id = snapshot.key;
+                var userViewStatus = $('#collapseQuote .list-group li[data-id=' + id + ']').find('.user-status');
+                var record = snapshot.val();
+                if (record == null) {
+                    userViewStatus.html(offlineStatus);
+                    markers[id].setMap(null);
+                } else {
+                    if (record.status == 'online') {
+                        userViewStatus.html(onlineStatus);
+                        markers[id].setMap(map);
+                    } else {
+                        userViewStatus.html(offlineStatus);
+                        markers[id].setMap(null);
+                    }
+                }
+            });
         });
+    }
+
+    function addMarker(id, pos) {
+        var marker = new google.maps.Marker({
+            position: pos,
+            map: map,
+            icon: icons.deliver.icon
+        });
+        var infowindow = new google.maps.InfoWindow({
+            content: "Đang tải..."
+        });
+        marker.addListener('click', function () {
+            infowindow.open(map, this);
+            database.ref('users').child(id).once('value', function (snapshot) {
+                var info = snapshot.val();
+                infowindow.setContent('<p>Tên: ' + info.fullName + '</p><p>SĐT: ' + info.phone + '</p><p>Email: ' + info.email + '</p>');
+            });
+        });
+        markers[id] = marker;
     }
 </script>
 }
