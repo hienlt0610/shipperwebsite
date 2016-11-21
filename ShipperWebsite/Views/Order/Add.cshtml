@@ -1,0 +1,113 @@
+﻿@model Order
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="button-action m-b-10">
+                    <a href="@Url.Action("Index","Order")" class="btn btn-warning btn-fill">Trở về</a>
+                </div>
+                @using (Html.BeginForm("Add", "Order", FormMethod.Post))
+                {
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="header">
+                                <h4 class="title">Thêm mới đơn hàng</h4>
+                            </div>
+                            <div class="content">
+                                
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">Người gửi</div>
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>Họ tên</label>
+                                                        @Html.TextBoxFor(m => m.Sender.FullName, new { @class = "form-control" })
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="form-group">
+                                                        <label>Địa chỉ</label>
+                                                        @Html.TextBoxFor(m => m.Sender.Address, new { @class = "form-control" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>Số điện thoại</label>
+                                                        @Html.TextBoxFor(m => m.Sender.Phone, new { @class = "form-control" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">Người nhận</div>
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>Họ tên</label>
+                                                        @Html.TextBoxFor(m => m.Receiver.FullName, new { @class = "form-control" })
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="form-group">
+                                                        <label>Địa chỉ</label>
+                                                        @Html.TextBoxFor(m => m.Receiver.Address, new { @class = "form-control" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label>Số điện thoại</label>
+                                                        @Html.TextBoxFor(m => m.Receiver.Phone, new { @class = "form-control" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-info btn-fill pull-right">Thêm</button>
+                                    <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="header">
+                                <h4 class="title">Thông tin</h4>
+                            </div>
+                            <div class="content">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Tổng tiền</label>
+                                            @Html.TextBoxFor(m => m.TotalPrice, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Nhân viên</label>
+                                            @Html.TextBoxFor(m => m.UserID, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+                }
+        </div>
+    </div>
+</div>
+

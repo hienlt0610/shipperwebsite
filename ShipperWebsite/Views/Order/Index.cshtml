@@ -1,0 +1,75 @@
+﻿@model List<Order>
+@{
+    ViewBag.Title = "Quản lý đơn hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <a href="@Url.Action("Add","Order")" class="btn btn-success btn-fill m-b-10">Thêm đơn hàng</a>
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Danh sách đơn đặt hàng</h4>
+                        <p class="category">Hiển thị danh sách đơn đặt hàng của hệ thống</p>
+                    </div>
+                    <div class="content table-responsive table-full-width">
+                        <table class="table table-hover table-striped order-table">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Người giao</th>
+                                    <th>Người nhận</th>
+                                    <th>Tình trạng</th>
+                                    <th>Nhân viên</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{int i = 0;}
+                                @foreach (var order in Model)
+                                {
+                                    i++;
+                                    <tr>
+                                        <td>@i</td>
+                                        <td data-container="body" data-toggle="popover" data-placement="top" data-content="Họ tên: 1<br />Địa chỉ: 1" title="Thông tin">1</td>
+                                        <td data-container="body" data-toggle="popover" data-placement="top" data-content="Họ tên: 1<br />Địa chỉ: 1" title="Thông tin">1</td>
+                                        <td>
+                                            @if (order.Status)
+                                            {
+                                                <span class="label label-success">Đã giao</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="label label-danger">Chưa giao</span>
+                                            }
+                                        </td>
+                                        <td>@order.UserID</td>
+                                        <td></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $('[data-toggle="popover"]').popover({ html: true });
+        $('body').on('click', function (e) {
+            $('[data-toggle="popover"]').each(function () {
+                //the 'is' for buttons that trigger popups
+                //the 'has' for icons within a button that triggers a popup
+                if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                    $(this).popover('hide');
+                }
+            });
+        });
+    </script>    
+}
