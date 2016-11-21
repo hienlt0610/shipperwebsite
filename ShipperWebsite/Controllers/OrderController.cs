@@ -39,7 +39,7 @@ namespace ShipperWebsite.Controllers
         public ActionResult Add(Order model)
         {
             model.Time = TimeUtils.ConvertToTimestamp(DateTime.Now);
-            FirebaseClient.Push("orders",model);
+            FirebaseClient.PushAsync("orders",model);
             return RedirectToAction("Index","Order");
         }
 	}

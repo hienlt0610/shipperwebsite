@@ -18,6 +18,12 @@
                     <p>Dashboard</p>
                 </a>
             </li>
+            <li class="@Html.IsActive("Index","Order")">
+                <a href="@Url.Action("Index","Order")">
+                    <i class="pe-7s-news-paper"></i>
+                    <p>Đơn hàng</p>
+                </a>
+            </li>
             <li class="@Html.IsActive("Index","Staff")">
                 <a href="@Url.Action("Index","Staff")">
                     <i class="pe-7s-user"></i>
@@ -26,7 +32,7 @@
             </li>
             <li class="@Html.IsActive("Index","Map")">
                 <a href="@Url.Action("Index","Map")">
-                    <i class="pe-7s-user"></i>
+                    <i class="pe-7s-map-marker"></i>
                     <p>Bản đồ</p>
                 </a>
             </li>
