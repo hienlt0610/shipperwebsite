@@ -8,6 +8,9 @@ using System.Web;
 using System.Web.Mvc;
 using ShipperWebsite.Models.ShipperAdmin;
 using ShipperWebsite.Controllers;
+using ShipperWebsite.core;
+using FireSharp.Serialization.ServiceStack;
+using FireSharp.Serialization.JsonNet;
 
 
 namespace ShipperWebsite.Controllers
@@ -24,6 +27,8 @@ namespace ShipperWebsite.Controllers
                 AuthSecret = "3Vng3ivH9gEkCpbDqdDuVBllRmjDwKIi4JyLx8gp",
                 BasePath = "https://shippermanager-9752c.firebaseio.com/"
             };
+            config.Serializer = new ServiceStackJsonSerializer(); //Register ServiceStack.Text
+            config.Serializer = new JsonNetSerializer();          //Register Json.Net
             FirebaseClient = new FirebaseClient(config);
         }
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
