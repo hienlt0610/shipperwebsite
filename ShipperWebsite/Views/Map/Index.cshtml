@@ -45,7 +45,7 @@
 
 @section scripts{
     <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCsDw_v8GIsJcDVWHijIvDVZYc5wjZjIbc&callback=initialize">
+        src="https://maps.googleapis.com/maps/api/js?key=@Config.GOOGLE_MAP_API&callback=initialize">
     </script>
     <script>
     var map;
@@ -201,14 +201,14 @@
                 var record = snapshot.val();
                 if (record == null) {
                     userViewStatus.html(offlineStatus);
-                    markers[id].setMap(null);
+                    //markers[id].setMap(null);
                 } else {
                     if (record.status == 'online') {
                         userViewStatus.html(onlineStatus);
-                        markers[id].setMap(map);
+                        //markers[id].setMap(map);
                     } else {
                         userViewStatus.html(offlineStatus);
-                        markers[id].setMap(null);
+                        //markers[id].setMap(null);
                     }
                 }
             });
@@ -224,11 +224,20 @@
         var infowindow = new google.maps.InfoWindow({
             content: "Đang tải..."
         });
+        google.maps.event.addListener(infowindow, 'domready', function () {
+            console.log(1);
+        });
         marker.addListener('click', function () {
             infowindow.open(map, this);
             database.ref('users').child(id).once('value', function (snapshot) {
                 var info = snapshot.val();
-                infowindow.setContent('<p>Tên: ' + info.fullName + '</p><p>SĐT: ' + info.phone + '</p><p>Email: ' + info.email + '</p>');
+                infowindow.setContent(
+                    '<div class="panel panel-info">' +
+                    '<div class="panel-heading">' +
+                    'eeee' +
+                    '</div>' +
+                    '</div>'
+                );
             });
         });
         markers[id] = marker;
