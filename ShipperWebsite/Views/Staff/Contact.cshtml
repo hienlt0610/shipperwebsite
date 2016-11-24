@@ -1,0 +1,50 @@
+﻿@model StaffContactViewModel
+@{
+    ViewBag.Title = "Contact";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var user = (User)ViewBag.User;
+}
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="button-action m-b-10">
+                    <a href="/Staff" class="btn btn-warning btn-fill">Trở về</a>
+                </div>
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Hệ thống gửi tin nhắn cho nhân viên</h4>
+                        <small>Gửi đến: @user.FullName</small>
+                    </div>
+                    <div class="content">
+                        @using(Html.BeginForm("Contact","Staff",FormMethod.Post)){
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        @Html.HiddenFor(m=>m.UserId)
+                                        <label>Tiêu đề:</label>
+                                        @Html.TextBoxFor(m => m.Title, new { @class = "form-control"})
+                                        @Html.ValidationMessageFor(m=>m.Title)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label>Nội dung tin nhắn</label>
+                                        @Html.TextBoxFor(m => m.Message, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.Message)
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-info btn-fill">Gửi tin nhắn</button>
+                            <div class="clearfix"></div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

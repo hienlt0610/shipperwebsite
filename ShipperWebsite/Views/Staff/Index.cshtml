@@ -44,7 +44,11 @@
                                         <td>@user.FullName</td>
                                         <td>@user.Email</td>
                                         <td>@user.Phone</td>
-                                        <td><a href="@Url.Action("Edit","Staff",new { id = user.UserID })" class="btn btn-default btn-fill">Sửa</a><a href="@Url.Action("Delete","Staff",new { id = user.UserID })" class="btn btn-danger btn-fill m-l-5">Xóa</a></td>
+                                        <td>
+                                            <a href="@Url.Action("Contact","Staff",new { id = user.UserID })" class="btn btn-info btn-fill btn-sm">Gửi tin nhắn</a>
+                                            <a href="@Url.Action("Edit","Staff",new { id = user.UserID })" class="btn btn-warning btn-fill btn-sm m-l-5">Sửa</a>
+                                            <a href="@Url.Action("Delete","Staff",new { id = user.UserID })" class="btn btn-danger btn-fill btn-sm m-l-5">Xóa</a>
+                                        </td>
                                     </tr>
                                 }
                             </tbody>
