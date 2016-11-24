@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
+using RestSharp.Serializers;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -8,6 +10,11 @@ namespace ShipperWebsite.FirebaseModel
 {
     public class Order
     {
+        public Order()
+        {
+            Sender = new Customer();
+            Receiver = new Customer();
+        }
         [JsonProperty(PropertyName = "orderID")]
         public String OrderID { get; set; }
 
