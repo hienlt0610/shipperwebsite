@@ -232,11 +232,9 @@
             database.ref('users').child(id).once('value', function (snapshot) {
                 var info = snapshot.val();
                 infowindow.setContent(
-                    '<div class="panel panel-info">' +
-                    '<div class="panel-heading">' +
-                    'eeee' +
-                    '</div>' +
-                    '</div>'
+                    '<p>Họ tên: ' + info.fullName + '</p>' +
+                    '<p>Email: ' + info.email + '</p>' +
+                    '<p>SĐT: ' + info.phone + '</p>'
                 );
             });
         });

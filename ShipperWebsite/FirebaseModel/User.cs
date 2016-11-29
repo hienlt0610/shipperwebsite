@@ -8,6 +8,13 @@ namespace ShipperWebsite.FirebaseModel
     public class User
     {
         private String email;
+        private String password;
+
+        public String Password
+        {
+            get { return password; }
+            set { password = value; }
+        }
 
         public String Email
         {

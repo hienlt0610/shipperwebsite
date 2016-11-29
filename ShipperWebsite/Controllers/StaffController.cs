@@ -89,5 +89,11 @@ namespace ShipperWebsite.Controllers
             ViewBag.User = user;
             return View(model);
         }
+
+        public ActionResult Add()
+        {
+            var model = new User();
+            return View(model);
+        }
 	}
 }

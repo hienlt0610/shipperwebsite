@@ -1,0 +1,122 @@
+﻿@model User
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="button-action m-b-10">
+                    <a href="@Url.Action("Index","Staff")" class="btn btn-warning btn-fill">Trở về</a>
+                </div>
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Thêm nhân viên mới</h4>
+                    </div>
+                    <div class="content">
+                        @using (Html.BeginForm("Add", "Staff", FormMethod.Post))
+                        {
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label>Mật khẩu</label>
+                                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label>Họ và tên</label>
+                                        @Html.TextBoxFor(m => m.FullName, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label>Số điện thoại</label>
+                                        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-info btn-fill">Thêm mới</button>
+                            <div class="clearfix"></div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-user">
+                    <div class="image">
+                        <img src="https://ununsplash.imgix.net/photo-1431578500526-4d9613015464?fit=crop&amp;fm=jpg&amp;h=300&amp;q=75&amp;w=400" alt="...">
+                    </div>
+                    <div class="content">
+                        <div class="author">
+                            <a href="#">
+                                <img class="avatar border-gray" width="100px" src="/Content/img/default-avatar.png" alt="@Model.FullName" title="@Model.FullName">
+
+                                <h4 class="title">
+                                    <div id="full_name_info">&nbsp;</div>
+                                    <div id="email_info"><small>&nbsp;</small></div>
+                                </h4>
+                            </a>
+                        </div>
+                        <p class="description text-center">
+                            <span id="phone_info">&nbsp;</span>
+                        </p>
+                        <div class="text-center">
+                            <button class="btn btn-info">Chọn ảnh</button>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="text-center">
+                        <button href="#" class="btn btn-simple"><i class="fa fa-facebook-square"></i></button>
+                        <button href="#" class="btn btn-simple"><i class="fa fa-twitter"></i></button>
+                        <button href="#" class="btn btn-simple"><i class="fa fa-google-plus-square"></i></button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $('#Email').keyup(function () {
+            if ($(this).val().length == 0) {
+                $('#email_info small').html("&nbsp;");
+            } else {
+                $('#email_info small').text($(this).val());
+            }
+        });
+
+        $('#FullName').keyup(function () {
+            if ($(this).val().length == 0) {
+                $('#full_name_info').html("&nbsp;");
+            } else {
+                $('#full_name_info').text($(this).val());
+            }
+        });
+
+        $('#Phone').keyup(function () {
+            if ($(this).val().length == 0) {
+                $('#phone_info').html("&nbsp;");
+            } else {
+                $('#phone_info').text($(this).val());
+            }
+        });
+    </script>    
+}
