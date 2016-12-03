@@ -32,6 +32,9 @@ namespace ShipperWebsite.Controllers
                 var response = await FirebaseClient.GetTaskAsync("orders");
                 var orders = response.ResultAs<Dictionary<String, Order>>();
 
+                var usersChild = await FirebaseClient.GetTaskAsync("users");
+                var users = BindingUtils.UserBinding(usersChild.ResultAs<Dictionary<String, User>>());
+                ViewBag.Users = users;
                 var model = orders.Select(u => new Order
                 {
                     OrderID = u.Key,

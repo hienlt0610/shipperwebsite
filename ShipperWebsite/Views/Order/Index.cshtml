@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Quản lý đơn hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var users = (List<User>)ViewBag.Users;
 }
 
 <div class="content">
@@ -31,6 +32,7 @@
                                 @foreach (var order in Model)
                                 {
                                     i++;
+                                    var user = users.FirstOrDefault(u => u.UserID == order.UserID);
                                     <tr>
                                         <td>@i</td>
                                         <td data-container="body" data-toggle="popover" data-placement="top" data-content="Họ tên: @order.Sender.FullName<br />Địa chỉ: @order.Sender.Address" title="Thông tin">@order.Sender.FullName</td>
@@ -45,7 +47,7 @@
                                                 <span class="label label-danger">Chưa giao</span>
                                             }
                                         </td>
-                                        <td>@order.UserID</td>
+                                        <td>@user.FullName</td>
                                         <td></td>
                                     </tr>
                                 }
