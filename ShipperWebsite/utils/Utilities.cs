@@ -82,5 +82,10 @@ namespace ShipperWebsite.utils
             }
             return sb.ToString();
         }
+
+        public static T Cast<T>(object entity) where T : class
+        {
+            return entity as T;
+        }
     }
 }
