@@ -19,7 +19,8 @@ namespace ShipperWebsite.Controllers
 {
     public class OrderController : BaseController
     {
-        public OrderController(){
+        public OrderController()
+        {
             CheckLogin = false;
         }
         //
@@ -43,7 +44,9 @@ namespace ShipperWebsite.Controllers
                     TotalPrice = u.Value.TotalPrice,
                 }).ToList();
                 return View(model);
-            }catch(Exception e){
+            }
+            catch (Exception e)
+            {
             }
             return View(new List<Order>());
         }
@@ -67,7 +70,8 @@ namespace ShipperWebsite.Controllers
         [HttpPost]
         public ActionResult Add(OrderViewModel model)
         {
-            if(ModelState.IsValid){
+            if (ModelState.IsValid)
+            {
                 Order order = new Order();
                 order.Time = TimeUtils.ConvertToTimestamp(DateTime.Now);
                 order.Sender.FullName = model.SenderFullName;
@@ -91,7 +95,7 @@ namespace ShipperWebsite.Controllers
                 FMessage.Message = "Bạn vừa được tiếp nhận một đơn hàng mới";
                 FirebaseClient.PushNotification("global", FMessage);
 
-                return RedirectToAction("Index","Order");
+                return RedirectToAction("Index", "Order");
             }
             var resUser = FirebaseClient.Get("users");
             var users = resUser.ResultAs<Dictionary<String, User>>();
@@ -107,5 +111,5 @@ namespace ShipperWebsite.Controllers
             return View(model);
         }
 
-	}
+    }
 }
