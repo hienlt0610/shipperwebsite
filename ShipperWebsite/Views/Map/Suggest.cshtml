@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var orderId = (String)ViewBag.OrderId;
 }
 <script src="https://www.gstatic.com/firebasejs/3.5.2/firebase.js"></script>
 <div class="map-container">
@@ -10,7 +11,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <strong>Nhân viên</strong>
+                        <strong>Nhân viên có thể giao</strong>
                         <span class="pull-right">
                             <a data-toggle="collapse" data-parent="#panel-quote-group" href="#collapseQuote">
                                 <span class="toggle-icon pe-7s-angle-up-circle"></span>
@@ -19,9 +20,7 @@
                     </h4>
                 </div>
                 <div id="collapseQuote" class="panel-collapse collapse">
-                    <ul class="list-group scrollbar">
-                        
-                    </ul>
+                    <ul class="list-group scrollbar"></ul>
                 </div>
             </div>
         </div>
@@ -32,21 +31,33 @@
 
 @section scripts{
     <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=@Config.GOOGLE_MAP_API&callback=initialize">
+            src="https://maps.googleapis.com/maps/api/js?key=@Config.GOOGLE_MAP_API&callback=initialize">
     </script>
     <script>
     var map;
     var marker;
     var markers = {};
+
+    var orderMarkers = {};
+
     var pos;
     var onlineStatus = '<label class="label label-success">Online</label>';
     var offlineStatus = '<label class="label label-danger">Offline</label>';
+    var noPoi = [
+        {
+            featureType: "poi",
+            stylers: [
+              { visibility: "off" }
+            ]
+        }
+    ];
     function initialize() {
         var uluru = { lat: 10.823640700000015, lng: 106.70425539999997 };
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: 17,
             center: uluru
         });
+        map.setOptions({ styles: noPoi });
     }
     var icons = {
         deliver: {
@@ -57,6 +68,12 @@
         },
         stop: {
             icon: '/Content/img/stop.png'
+        },
+        order_success: {
+            icon: '/Content/img/order-success.png'
+        },
+        order_unsuccess: {
+            icon: '/Content/img/order-unsuccess.png'
         }
     }
     // Initialize Firebase
@@ -108,15 +125,34 @@
     //        });
     //    }
     //});
-    
-    database.ref('users').once('value', function (snapshot) {
-        $('#collapseQuote .list-group').html("");
-        snapshot.forEach(function (childSnapshot) {
-            var id = childSnapshot.key;
-            addToListStaff(id);
+
+    //database.ref('users').once('value', function (snapshot) {
+    //    $('#collapseQuote .list-group').html("");
+    //    snapshot.forEach(function (childSnapshot) {
+    //        var id = childSnapshot.key;
+    //        addToListStaff(id);
+    //    });
+        //});
+
+    database.ref('user_location').once('value', function (snapshot) {
+        snapshot.forEach(function (childSnap) {
+            var userId = childSnap.key;
+            var user = childSnap.val();
+            database.ref('presences').child(userId).once('value', function (childSnap) {
+                var result = childSnap.val();
+                var currentLatLng = new google.maps.LatLng(result.lat, result.lng);
+                //Lay danh sach nv truc tuyen
+                if (result.status == 'online') {
+                    //Neu nv dang ranh
+                    console.log(user);
+                    if (!user.hasOwnProperty('orders')) {
+                        addToListStaff(userId);
+                    }
+                }
+            });
         });
-        });
-    
+    });
+
     //Khởi tạo các marker
     database.ref('user_location').once('value', function (snapshot) {
         snapshot.forEach(function (childSnapshot) {
@@ -126,6 +162,43 @@
             var now = new Date().getTime();
             var duration = now - parseInt(record.lastTime);
             addMarker(id, pos);
+        });
+    });
+
+    //KHoi tao cac marker order
+    database.ref('orders').once('value', function (snapshot) {
+        var currentPos;
+        snapshot.forEach(function (childSnap) {
+            var id = childSnap.key;
+            var result = childSnap.val();
+            var pos = new google.maps.LatLng(result.sender.lat, result.sender.lng);
+            marker = new google.maps.Marker({
+                position: pos,
+                map: map
+            });
+            if (result.status == true) {
+                marker.setIcon(icons.order_success.icon);
+            } else {
+                marker.setIcon(icons.order_unsuccess.icon);
+            }
+            
+            if(id == '@orderId'){
+                jumpTo(pos.lat(), pos.lng());
+            }
+
+            var infowindow = new google.maps.InfoWindow({
+                content: "Đang tải..."
+            });
+            marker.addListener('click', function () {
+                infowindow.open(map, this);
+                infowindow.setContent(
+                    '<p>Người giao: '+ result.sender.fullName +' </p>' +
+                    '<p>Địa chỉ: '+ result.sender.address +' </p>'+
+                    '<\hr>'+
+                    '<p>Người nhận: '+ result.receiver.fullName +' </p>' +
+                    '<p>Địa chỉ: '+ result.receiver.address +' </p>'
+                );
+            });
         });
     });
 
@@ -280,5 +353,5 @@
         });
         markers[id] = marker;
     }
-</script>
+    </script>
 }

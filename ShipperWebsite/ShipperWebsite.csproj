@@ -243,6 +243,8 @@
     <Content Include="Content\img\mask.png" />
     <Content Include="Content\img\motorbike.png" />
     <Content Include="Content\img\new_logo.png" />
+    <Content Include="Content\img\order-success.png" />
+    <Content Include="Content\img\order-unsuccess.png" />
     <Content Include="Content\img\sidebar-1.jpg" />
     <Content Include="Content\img\sidebar-2.jpg" />
     <Content Include="Content\img\sidebar-3.jpg" />
@@ -361,6 +363,7 @@
     <Content Include="Views\Order\Add.cshtml" />
     <Content Include="Views\Staff\Contact.cshtml" />
     <Content Include="Views\Staff\Add.cshtml" />
+    <Content Include="Views\Map\Suggest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

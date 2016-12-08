@@ -14,5 +14,11 @@ namespace ShipperWebsite.Controllers
         {
             return View();
         }
-	}
+
+        public ActionResult Suggest(String id) {
+            ViewBag.OrderId = id;
+            return View();
+        }
+
+    }
 }

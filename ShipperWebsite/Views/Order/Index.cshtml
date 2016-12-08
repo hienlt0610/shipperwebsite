@@ -48,7 +48,9 @@
                                             }
                                         </td>
                                         <td>@user.FullName</td>
-                                        <td></td>
+                                        <td>
+                                            <a href="@Url.Action("Suggest","Map", new { id = order.OrderID})" class="btn btn-info btn-fill btn-sm">Xem bản đồ</a>
+                                        </td>
                                     </tr>
                                 }
                             </tbody>
