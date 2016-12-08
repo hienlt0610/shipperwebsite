@@ -21,7 +21,7 @@ namespace ShipperWebsite.Controllers
         protected IFirebaseClient FirebaseClient { get; set; }
         public BaseController()
         {
-            CheckLogin = true;
+            CheckLogin = false;
             IFirebaseConfig config = new FirebaseConfig
             {
                 AuthSecret = "3Vng3ivH9gEkCpbDqdDuVBllRmjDwKIi4JyLx8gp",

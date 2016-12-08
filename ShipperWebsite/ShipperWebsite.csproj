@@ -196,6 +196,7 @@
     <Compile Include="FirebaseModel\FirebaseMessage\FMessage.cs" />
     <Compile Include="FirebaseModel\LatLng.cs" />
     <Compile Include="FirebaseModel\Order.cs" />
+    <Compile Include="FirebaseModel\Presences.cs" />
     <Compile Include="FirebaseModel\User.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -207,6 +208,8 @@
     <Compile Include="Models\ShipperAdmin\UserAdmin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="utils\BindingUtils.cs" />
+    <Compile Include="utils\Staff.cs" />
     <Compile Include="utils\TimeUtils.cs" />
     <Compile Include="utils\Utilities.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
