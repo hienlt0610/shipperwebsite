@@ -20,20 +20,7 @@
                 </div>
                 <div id="collapseQuote" class="panel-collapse collapse">
                     <ul class="list-group scrollbar">
-                        <li class="list-group-item">
-                            <div class="pull-left" style="margin-right:10px;"> 
-                                <a href="#">
-                                    <img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" class="media-photo">
-                                </a>
-                            </div>
-                            <div class="list-body">
-                                <h4 class="title">
-                                    Lorem Impsum
-                                </h4>
-                                <p class="summary">01207774140</p>
-                                <p class="summary">hienlt0610@gmail.com</p>
-                            </div>
-                        </li>
+                        
                     </ul>
                 </div>
             </div>
@@ -64,6 +51,12 @@
     var icons = {
         deliver: {
             icon: '/Content/img/motorbike.png'
+        },
+        free: {
+            icon: '/Content/img/motorbike-free.png'
+        },
+        stop: {
+            icon: '/Content/img/stop.png'
         }
     }
     // Initialize Firebase
@@ -142,7 +135,33 @@
         var record = snapshot.val();
         var marker = markers[id];
         var pos = new google.maps.LatLng(record.lat, record.lng);
+
+        if (snapshot.hasChild('orders')) {
+            marker.setIcon(icons.deliver.icon);
+        } else {
+            marker.setIcon(icons.free.icon);
+        }
+
         marker.setPosition(pos);
+    });
+
+    //Lắng nghe sự kiện trạng thái nhân viên
+    database.ref('presences').on('child_changed', function (snapshot) {
+        var result = snapshot.val();
+        var id = snapshot.key;
+        if(result.status == 'offline'){
+            setMarkerIcon(id, icons.stop.icon);
+        } else {
+            database.ref('user_location').child(id).once('value', function (snapshot) {
+                var record = snapshot.val();
+                var id = snapshot.key;
+                if (snapshot.hasChild('orders')) {
+                    setMarkerIcon(id, icons.deliver.icon);
+                } else {
+                    setMarkerIcon(id, icons.free.icon);
+                }
+            });
+        }
     });
 
     function jumpTo(lat, lng) {
@@ -215,11 +234,32 @@
         });
     }
 
+    function setMarkerIcon(id, icon) {
+        var marker = markers[id];
+        if(marker != null){
+            marker.setIcon(icon);
+        }
+    }
+
     function addMarker(id, pos) {
         var marker = new google.maps.Marker({
             position: pos,
-            map: map,
-            icon: icons.deliver.icon
+            map: map
+        });
+        database.ref('presences').child(id).once('value', function (snapshot) {
+            var result = snapshot.val();
+            if(result.status == 'offline'){
+                marker.setIcon(icons.stop.icon);
+            } else {
+                database.ref('user_location').child(id).once('value', function (snapshot) {
+                    var result = snapshot.val();
+                    if (snapshot.hasChild('orders')) {
+                        marker.setIcon(icons.deliver.icon);
+                    } else {
+                        marker.setIcon(icons.free.icon);
+                    }
+                });
+            }
         });
         var infowindow = new google.maps.InfoWindow({
             content: "Đang tải..."
